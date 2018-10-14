@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
 // Use for > 4.11.2
-let url = 'mongodb://ray:rayboy26@ds141320.mlab.com:41320/heroku_dwlds0bq';
+let url = 'mongodb://ray:rayboy26@ds129003.mlab.com:29003/heroku_wx1l5lx7';
 if (DEBUG) {
   url = 'mongodb://127.0.0.1:27017/video';
 }
