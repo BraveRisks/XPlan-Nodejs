@@ -53,7 +53,7 @@ function getAVWith1pando(page) {
     try {
       let browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
       });
       if (DEBUG) {
         browser = await puppeteer.launch({
@@ -94,7 +94,7 @@ function getAVWithHeyzo(page) {
     try {
       let browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
       });
       if (DEBUG) {
         browser = await puppeteer.launch({
@@ -136,7 +136,7 @@ function getAVWithCaribbean(page) {
     try {
       let browser = await puppeteer.launch({
         headless: true,
-        args: ['--no-sandbox']
+        args: ['--no-sandbox', '--disable-setuid-sandbox'] 
       });
       if (DEBUG) {
         browser = await puppeteer.launch({

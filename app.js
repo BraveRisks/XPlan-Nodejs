@@ -28,7 +28,7 @@ app.set('view engine', 'html');
 app.engine('html', require('ejs').__express);
 
 // Utils
-global.DEBUG = true;
+global.DEBUG = false;
 global.Utils = require('./utils/utils');
 
 // Routes
