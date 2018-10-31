@@ -24,10 +24,11 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
+app.set('view engine', 'html');
+app.engine('html', require('ejs').__express);
 
 // Utils
-global.DEBUG = false;
+global.DEBUG = true;
 global.Utils = require('./utils/utils');
 
 // Routes
@@ -42,7 +43,7 @@ global.Trigger = require('./db/model/trigger');
 
 // AV List Schedule
 // 每天凌晨3點觸發
-let rule = new schedule.RecurrenceRule();
+/*let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [new schedule.Range(0, 6)];
 rule.hour = 3;
 rule.minute = 0;
@@ -52,14 +53,14 @@ let avSchedule = schedule.scheduleJob(rule, () => {
     method: 'AV Schedule',
     createDate: Utils.dateNow()
   }).save();
-});
+});*/
 
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'), function () {
   console.log('XPlan app is running on port', app.get('port'));
-  new Trigger({
+  /*new Trigger({
     method: 'Video getAVList',
     createDate: Utils.dateNow()
-  }).save();
-  av.getAVList(true);
+  }).save();*/
+  av.getAVList();
 });
