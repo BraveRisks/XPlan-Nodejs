@@ -4,7 +4,7 @@
    "description": "It's for nodejs app demo.",
    "engines": {
       "node": "8.11.2",
-      "npm": "7.1.0"
+      "npm": "6.1.0"
    },
    "main": "app.js",
    "scripts": {
