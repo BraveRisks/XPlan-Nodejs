@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 // Use for > 4.11.2
 let url = 'mongodb://ray:rayboy26@ds129003.mlab.com:29003/heroku_wx1l5lx7';
 if (DEBUG) {
-  url = 'mongodb://127.0.0.1:27017/video';
+  url = 'mongodb://127.0.0.1:27017/av-idol';
 }
 const options = {
   useNewUrlParser: true,
@@ -20,7 +20,8 @@ const options = {
   socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
   family: 4 // Use IPv4, skip trying IPv6
 };
-mongoose.connect(url, {useNewUrlParser: true}).then(
+
+mongoose.connect(url, {useNewUrlParser: true, useFindAndModify: false}).then(
    () => {
       console.log(`DB connection ${url} success.`);
    },

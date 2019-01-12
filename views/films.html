@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+  <title>
+    <%=title%>
+  </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="/css/style_dashboard.css">
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
+  <link rel="icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
+</head>
+
+<body>
+  <div class="drawer">
+    <div class="drawer-header">
+      <img src="/images/dashboard.svg">
+      <span>AVs 資訊版</span>
+    </div>
+    <div class="drawer-divider"></div>
+    <div class="drawer-list">
+      <ul>
+        <li class="drawer-list-section" id="sectionFilms">
+          <img src="/images/drawer_films.svg"><span>影片</span><img id="arrowImage">
+        </li>
+        <li class="drawer-list-child" id="1pondo"><a href="/v1/films/search?category=1pondo&page=1">1pondo</a></li>
+        <li class="drawer-list-child" id="heyzo"><a href="/v1/films/search?category=heyzo&page=1">Heyzo</a></li>
+        <li class="drawer-list-child" id="caribbean"><a href="/v1/films/search?category=caribbeancom&page=1">Caribbean</a></li>
+        <li class="drawer-list-child" id="s-cute"><a href="/v1/films/search?category=s-cute&page=1">S-Cute</a></li>
+        <li class="drawer-list-section" id="sectionNews">
+          <img src="/images/drawer_news.svg"><span>情報</span>
+        </li>
+        <li class="drawer-list-section" id="sectionTriggers">
+          <img src="/images/drawer_trigger.svg"><span>Log紀錄</span>
+        </li>
+        <li class="drawer-list-section" id="sectionUsers">
+          <img src="/images/drawer_user.svg"><span>使用者管理</span>
+        </li>
+        <li class="drawer-list-section" id="sectionLogout">
+          <img src="/images/drawer_logout.svg"><span>Logout</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="content">
+    <table class="content-table">
+      <thead>
+        <tr>
+          <td class="column1">封面</td>
+          <td class="column2">片商</td>
+          <td class="column3">片名</td>
+          <td class="column4">日期</td>
+          <td class="column5">建立日期</td>
+          <td class="column5">Action</td>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(let i = 0; i < data.list.length; i++) { %>
+        <tr class="content-tbody-tr" data-href="<%= data.list[i].htmlURL %>">
+          <td class="column1"><img src="<%= data.list[i].imgURL %>" alt="<%= data.list[i].title %>"></td>
+          <td class="column2">
+            <%= data.list[i].category %>
+          </td>
+          <td class="column3">
+            <%= data.list[i].title %>
+          </td>
+          <td class="column4">
+            <%= data.list[i].date %>
+          </td>
+          <td class="column5">
+            <%= (data.list[i].createDate).split(' ')[0] %>
+          </td>
+          <td class="column6">
+            <img class="dataEdit" data-type="films" data-id="<%= data.list[i]._id %>" data-title="<%= data.list[i].title %>"
+              data-category="<%= data.current.category %>" data-page="<%= data.current.page %>" src="/images/dataEdit.svg">
+            <img class="dataDelete" data-type="films" data-id="<%= data.list[i]._id %>" data-title="<%= data.list[i].title %>"
+              data-category="<%= data.current.category %>" data-page="<%= data.current.page %>" src="/images/dataDelete.svg">
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class="footer">
+    <div class="pagination" id="pagination">
+      <a href="/v1/films/search?category=<%= data.current.category %>&page=1" style="visibility:<%= data.prevShow ? 'visible' : 'hidden' %>">&laquo;</a>
+      <% for (let i = data.current.start; i < data.current.end; i++) { %>
+      <% if (i == data.current.page) { %>
+      <a href="/v1/films/search?category=<%= data.current.category %>&page=<%= i+1 %>" class="active">
+        <%= i+1 %>
+      </a>
+      <% } else { %>
+      <a href="/v1/films/search?category=<%= data.current.category %>&page=<%= i+1 %>">
+        <%= i+1 %>
+      </a>
+      <% } %>
+      <% } %>
+      <a href="/v1/films/search?category=<%= data.current.category %>&page=<%= data.pageCount %>" style="visibility:<%= data.nextShow ? 'visible' : 'hidden' %>">&raquo;</a>
+    </div>
+  </div>
+  <div class="right-content">
+    <img src="/images/arrow_up_scroll.svg" id="scrollImage">
+  </div>
+  <!-- Dialog -->
+  <div class="overlay">
+    <div class="popup">
+      <h2>刪除</h2>
+      <img id="popupclose" src="/images/close_icon.svg">
+      <div class="popupcontent">
+        <p id="popupmessage"></p>
+      </div>
+      <div class="popupfooter">
+        <button id="popupcancel">取消</button>
+        <button id="popupdone">確定</button>
+      </div>
+    </div>
+  </div>
+  <script src="/javascript/dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,175 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: url('/images/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  font-family: sans-serif;
+}
+
+.editbox {
+  width: 60%;
+  height: 600px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff; 
+  top: 80px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  padding: 50px 30px;
+  border-radius: 15px;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  /* border : 框線寬度 框線樣式 框線顏色 */
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  top: -50px;
+  left: calc(50% - 50px);
+  /* object-fit : 改變scale type
+     res : https://www.w3schools.com/css/css3_object-fit.asp
+  */
+  object-fit: cover;
+}
+
+.edit-content {
+  margin-top: 20px;
+}
+.edit-content span {
+  font-size: 20px;
+  line-height: 40px;
+}
+.edit-content input[type="text"]{
+  margin-right: 15px;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  background: transparent;
+  outline: none;
+  height: 40px;
+  color: #ffffff;
+  font-size: 20px;
+}
+.edit-content .text-short {
+  width: 110px;
+}
+.edit-content .text-long {
+  width: 100%;
+}
+.edit-content textarea {
+  margin-top: 10px;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  width: calc(100% - 25px);
+  height: 200px;
+  color: #000000;
+  font-size: 16px;
+  padding: 10px;
+  /* resize：使textarea無法拖曳放大縮小 https://www.w3schools.com/cssref/css3_pr_resize.asp */
+  resize: none;
+}
+
+.edit-footer {
+  margin-top: 20px;
+  text-align: end;
+}
+.edit-footer button {
+  width: 100px;
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+  /* outline：去掉預設藍框 */
+  outline: none;
+  transition: background-color .2s ease-in-out;
+}
+.edit-footer #editcancel {
+  background-color: #C1C0CC;
+}
+.edit-footer #editcancel:hover {
+  background-color: #ABAABB;
+}
+
+.edit-footer #editupdate {
+  background-color: #C71A1A;
+}
+.edit-footer #editupdate:hover {
+  background-color: #9E1515;
+}
+
+/* .loginbox p {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+.loginbox input {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.loginbox input[type="text"], input[type="password"] {
+  border: none;
+  border-bottom: 1px solid #ffffff;
+  background: transparent;
+  outline: none;
+  height: 40px;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.loginbox input[type="submit"] {
+  border: none;
+  outline: none;
+  height: 40px;
+  background: #fb2525;
+  color: #ffffff;
+  font-size: 18px;
+  border-radius: 20px;
+}
+
+.loginbox input[type="submit"]:hover {
+  cursor: pointer;
+  background: #e10505;
+  color: #ffffff;
+}
+
+.loginbox button {
+  width: 100%;
+  border: none;
+  outline: none;
+  height: 40px;
+  background: #fb2525;
+  color: #ffffff;
+  font-size: 18px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.loginbox button:hover {
+  cursor: pointer;
+  background: #e10505;
+  color: #ffffff;
+}
+
+.loginbox a {
+  text-decoration: none;
+  font-size: 12px;
+  line-height: 20px;
+  color: darkgray;
+}
+
+.loginbox a:hover {
+  color: #ffc107;
+} */

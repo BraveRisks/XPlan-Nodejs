@@ -1,10 +1,14 @@
+'use strict'
+
 const express = require('express');
 const body_parser = require('body-parser');
 const logger = require('morgan');
 const path = require('path');
 const schedule = require('node-schedule');
+const AVDataManager = require('./class/avDataManager');
 
 let app = express();
+let avDataManager = new AVDataManager();
 
 // jwt srect key
 process.env.SECRET_KEY = 'Ray@Zhang_10*S_e_c^r^e_t';
@@ -31,26 +35,27 @@ app.engine('html', require('ejs').__express);
 global.DEBUG = false;
 global.Utils = require('./utils/utils');
 
-// Routes
-//let api = require('./routes/v1/api');
-//app.use('/api', api);
-let av = require('./routes/v1/av');
+// Routes & Api
+let api = require('./routes/api');
+app.use(['/', '/v1', '/privacy'], api);
 
 // DB
 require('./db/connect');
-global.Video = require('./db/model/video');
+global.Films = require('./db/model/films');
+global.News = require('./db/model/news');
 global.Trigger = require('./db/model/trigger');
 
 // AV List Schedule
-// 每天凌晨3點觸發
+// 每天凌晨2點觸發
 /*let rule = new schedule.RecurrenceRule();
 rule.dayOfWeek = [new schedule.Range(0, 6)];
-rule.hour = 3;
+rule.hour = 2;
 rule.minute = 0;
 let avSchedule = schedule.scheduleJob(rule, () => {
-  av.getAVList(false);
+  avDataManager.getAVFilms(false);
+  avDataManager.getAVNews(false);
   new Trigger({
-    method: 'AV Schedule',
+    method: 'Start AV Schedule',
     createDate: Utils.dateNow()
   }).save();
 });*/
@@ -58,9 +63,8 @@ let avSchedule = schedule.scheduleJob(rule, () => {
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'), function () {
   console.log('XPlan app is running on port', app.get('port'));
-  /*new Trigger({
-    method: 'Video getAVList',
-    createDate: Utils.dateNow()
-  }).save();*/
-  av.getAVList();
+  avDataManager.getAVFilms(true);
+  avDataManager.getAVNews(true);
+  //avDataManager.getAVFilms(false);
+  //avDataManager.getAVNews(false);
 });

@@ -7,18 +7,18 @@ let triggerSchema = new Schema({
     type: String,
     required: true,
   },
-  createDate: {
-    type: String,
-    required: true
-  },
-  errorMsg: {
+  message: {
     type: String,
     default: ''
   },
   isError: {
     type: Boolean,
     default: false
+  },
+  createDate: {
+    type: String,
+    required: true
   }
 }, {collection: 'triggers'});
 
-let Trigger = module.exports = mongoose.model('triggers', triggerSchema);
+module.exports = mongoose.model('triggers', triggerSchema);

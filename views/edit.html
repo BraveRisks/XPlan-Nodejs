@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<header>
+  <title>
+    <%= title %>
+  </title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="stylesheet" type="text/css" href="/css/style_dashboard_edit.css">
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
+  <link rel="icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
+</header>
+
+<body>
+  <div class="editbox">
+    <img src="<%= data.imgURL %>" class="avatar">
+    <div class="edit-content">
+      <span>Category：</span>
+      <input class="text-short" id="category" type="text" value="<%= data.category %>">
+      <span>Date：</span>
+      <input class="text-short" id="date" type="text" value="<%= data.date %>">
+      <span>ViewCount：</span>
+      <input class="text-short" id="viewcount" type="text" value="<%= data.viewCount %>">
+    </div>
+    <div class="edit-content">
+      <span>Title：</span>
+      <input class="text-long" id="title" type="text" value="<%= data.title %>">
+    </div>
+    <div class="edit-content">
+      <span>Content：</span>
+      <textarea id="content"><%= data.content %></textarea>
+    </div>
+    <div class="edit-footer">
+      <button id="editcancel">取消</button>
+      <button id="editupdate" data-type="<%= type %>" data-id="<%= data.id %>">更新</button>
+    </div>
+  </div>
+  <script src="/javascript/dashboard_edit.js"></script>
+</body>
+
+</html>

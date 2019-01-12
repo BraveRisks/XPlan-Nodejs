@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports.dateNow = function () {
   // options : https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleString
   let options = {
