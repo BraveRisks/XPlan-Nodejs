@@ -63,8 +63,8 @@ let avSchedule = schedule.scheduleJob(rule, () => {
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'), function () {
   console.log('XPlan app is running on port', app.get('port'));
-  avDataManager.getAVFilms(true);
-  avDataManager.getAVNews(true);
+  //avDataManager.getAVFilms(true);
+  //avDataManager.getAVNews(true);
   //avDataManager.getAVFilms(false);
   //avDataManager.getAVNews(false);
 });
