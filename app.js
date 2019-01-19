@@ -65,6 +65,6 @@ app.listen(app.get('port'), function () {
   console.log('XPlan app is running on port', app.get('port'));
   //avDataManager.getAVFilms(true);
   //avDataManager.getAVNews(true);
-  //avDataManager.getAVFilms(false);
-  //avDataManager.getAVNews(false);
+  avDataManager.getAVFilms(false);
+  avDataManager.getAVNews(false);
 });

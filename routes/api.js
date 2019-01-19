@@ -158,6 +158,10 @@ router.post('/v1/:type/update/:id', (req, res) => {
     });
 });
 
+router.post('/v1/feedback', (req, res) => {
+  
+});
+
 function handleResult(res, datas, type, page, isFromWeb, category = '') {
   let totalCount = datas[1];
   // 計算分頁數量
