@@ -91,7 +91,7 @@ function getAVFilmsWith(films, page) {
       // https://www.kabanoki.net/2473
       const page = await browser.newPage();
       await page.setUserAgent(userAgent);
-      await page.goto(url, {waitUntil: 'load', timeout: 0});
+      await page.goto(url, {waitUntil: 'load', timeout: 100000});
       if (films == onepondo) {
         await page.waitForSelector('li.pagination-next > a');
       }
