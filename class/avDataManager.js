@@ -3,7 +3,7 @@
 const puppeteer = require('puppeteer');
 const cheerio = require('cheerio');
 
-const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36';
+const userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36';
 const onepondo = '1pondo';
 const heyzo = 'heyzo';
 const caribbean = 'caribbeancom';
@@ -91,7 +91,7 @@ function getAVFilmsWith(films, page) {
       // https://www.kabanoki.net/2473
       const page = await browser.newPage();
       await page.setUserAgent(userAgent);
-      await page.goto(url, {waitUntil: 'load', timeout: 100000});
+      await page.goto(url, {waitUntil: 'load', timeout: 0});
       if (films == onepondo) {
         await page.waitForSelector('li.pagination-next > a');
       }

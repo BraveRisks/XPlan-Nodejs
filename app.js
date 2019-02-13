@@ -12,6 +12,11 @@ let avDataManager = new AVDataManager();
 
 // jwt srect key
 process.env.SECRET_KEY = 'Ray@Zhang_10*S_e_c^r^e_t';
+process.on('unhandledRejection', (reason, promise) => {
+  Utils.log('Unhandled Rejection at:', reason.stack || reason);
+  // Recommended: send the information to sentry.io
+  // or whatever crash reporting service you use
+});
 
 // Use body-parser
 app.use(body_parser.json());
