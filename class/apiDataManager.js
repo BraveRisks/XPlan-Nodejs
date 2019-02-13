@@ -179,6 +179,24 @@ class ApiDataManager {
         });
     }
   }
+
+  // 回饋意見
+  sendFeedback(parameters) {
+    return new Promise((resolve, reject) => {
+      new Feedback({
+        ranking: parameters.ranking,
+        content: parameters.content,
+        recommend: parameters.recommend,
+        createDate: Utils.dateNow()
+      }).save((err, e) => {
+        let result = {
+          status: err === null,
+          message: err ? `SendFeedback failed ${err}.` : `SendFeedback success.`
+        }
+        resolve(result);
+      });
+    });
+  }
 }
 
 function getFilmsDetailWith(category, page, isFromWeb, isCount = false) {

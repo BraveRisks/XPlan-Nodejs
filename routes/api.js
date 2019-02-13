@@ -149,7 +149,7 @@ router.post('/v1/:type/update/:id', (req, res) => {
     title: req.body.title,
     content: req.body.content,
     date: req.body.date,
-    viewCount: req.body.viewCount === '' ? 0 : parseInt(req.body.viewCount),
+    viewCount: req.body.viewCount === '' ? 0 : parseInt(req.body.viewCount)
   }
   apiDataManager.updateData(type, parameters)
     .then(datas => {
@@ -159,7 +159,16 @@ router.post('/v1/:type/update/:id', (req, res) => {
 });
 
 router.post('/v1/feedback', (req, res) => {
-  
+  let parameters = {
+    ranking: req.body.ranking,
+    content: req.body.content,
+    recommend: req.body.recommend
+  }
+
+  apiDataManager.sendFeedback(parameters)
+    .then(datas => {
+      res.status(200).json(datas);
+    });
 });
 
 function handleResult(res, datas, type, page, isFromWeb, category = '') {
@@ -169,9 +178,11 @@ function handleResult(res, datas, type, page, isFromWeb, category = '') {
   pageCount = totalCount % LIMIT_COUNT != 0 ? pageCount + 1 : pageCount;
   datas[0].totalCount = totalCount;
   datas[0].pageCount = pageCount;
+
   if (category != '') {
     datas[0].current.category = category;
   }
+
   if (isFromWeb) {
     datas[0].current.page = page;
 

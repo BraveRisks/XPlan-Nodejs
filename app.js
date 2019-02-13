@@ -32,7 +32,7 @@ app.set('view engine', 'html');
 app.engine('html', require('ejs').__express);
 
 // Utils
-global.DEBUG = false;
+global.DEBUG = true;
 global.Utils = require('./utils/utils');
 
 // Routes & Api
@@ -44,13 +44,14 @@ require('./db/connect');
 global.Films = require('./db/model/films');
 global.News = require('./db/model/news');
 global.Trigger = require('./db/model/trigger');
+global.Feedback = require('./db/model/feedback');
 
 // AV List Schedule
 // 每天凌晨2點觸發
 /*let rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = [new schedule.Range(0, 6)];
-rule.hour = 2;
-rule.minute = 0;
+//rule.dayOfWeek = [new schedule.Range(0, 6)];
+//rule.hour = 2;
+rule.minute = 30;
 let avSchedule = schedule.scheduleJob(rule, () => {
   avDataManager.getAVFilms(false);
   avDataManager.getAVNews(false);

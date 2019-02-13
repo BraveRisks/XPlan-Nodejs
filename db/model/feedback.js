@@ -3,15 +3,19 @@ let Schema = mongoose.Schema;
 
 // 使用者回饋
 let feedbackSchema = new Schema({
+  user: {
+    type: String,
+    default: ''
+  },
   ranking: {
-    type: number,
+    type: Number,
     required: true,
   },
   content: {
     type: String
   },
   recommend: {
-    type: boolean,
+    type: Boolean,
     required: true
   },
   createDate: {
