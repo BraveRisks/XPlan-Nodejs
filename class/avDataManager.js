@@ -31,9 +31,7 @@ class AVDataManager {
    */
   getAVFilms(needLoop = false, page = 1) {
     saveTrigger(`Start getAVFilms`);
-    if (needLoop) {
-      process.setMaxListeners(Infinity);
-    }
+    process.setMaxListeners(Infinity);
     for (let i = 0; i < filmsNames.length; i++) {
       if (needLoop) {
         intervals.push(setInterval(() => {
