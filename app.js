@@ -11,13 +11,6 @@ const AVCore = require('./class/av-core');
 let app = express();
 let avDataManager = new AVDataManager();
 
-process.on('unhandledRejection', (reason, promise) => {
-  log(`Unhandled Rejection stack at:${reason.stack}`);
-  log(`Unhandled Rejection reason at:${reason}`);
-  // Recommended: send the information to sentry.io
-  // or whatever crash reporting service you use
-});
-
 // Use body-parser
 app.use(body_parser.json());
 // true : 在bodyParser處理Query String
@@ -51,6 +44,14 @@ global.Films = require('./db/model/films');
 global.News = require('./db/model/news');
 global.Log = require('./db/model/log');
 global.Feedback = require('./db/model/feedback');
+
+process.on('unhandledRejection', (reason, promise) => {
+  log(`Unhandled Rejection stack at:${reason.stack}`);
+  log(`Unhandled Rejection reason at:${reason}`);
+  AVCore.eventLog('unhandledRejection', `Rejection reason at:${reason}`);
+  // Recommended: send the information to sentry.io
+  // or whatever crash reporting service you use
+});
 
 // AV List Schedule
 // 每天凌晨2點觸發

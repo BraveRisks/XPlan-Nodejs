@@ -7,7 +7,7 @@
   </title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="stylesheet" type="text/css" href="/css/style_dashboard_trigger.css">
+  <link rel="stylesheet" type="text/css" href="/css/style_dashboard_log.css">
   <link rel="shortcut icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
   <link rel="icon" href="/images/favicon.ico" type="image/vnd.microsoft.icon">
 </head>
@@ -47,10 +47,11 @@
     <table class="content-table">
       <thead>
         <tr>
-          <td class="column1">觸發時間</td>
-          <td class="column2">觸發方法</td>
-          <td class="column3">是否錯誤</td>
-          <td class="column4">錯誤訊息</td>
+          <td class="column1">執行時間</td>
+          <td class="column2">執行方法</td>
+          <td class="column3">訊息</td>
+          <td class="column4">是否錯誤</td>
+          <td class="column5">錯誤訊息</td>
         </tr>
       </thead>
       <tbody>
@@ -63,9 +64,12 @@
             <%= data.list[i].method %>
           </td>
           <td class="column3">
-            <%= data.list[i].isError %>
+            <%= data.list[i].message %>
           </td>
           <td class="column4">
+            <%= data.list[i].isError %>
+          </td>
+          <td class="column5">
             <%= data.list[i].errorMsg %>
           </td>
         </tr>
@@ -75,19 +79,19 @@
   </div>
   <div class="footer">
     <div class="pagination" id="pagination">
-      <<a href="/v1/triggers/search?page=1" style="visibility:<%= data.prevShow ? 'visible' : 'hidden' %>">&laquo;</a>
+      <<a href="/v1/log/search?page=1" style="visibility:<%= data.prevShow ? 'visible' : 'hidden' %>">&laquo;</a>
       <% for (let i = data.current.start; i < data.current.end; i++) { %>
         <% if (i == data.current.page) { %>
-          <a href="/v1/triggers/search?page=<%= i+1 %>" class="active">
+          <a href="/v1/log/search?page=<%= i+1 %>" class="active">
           <%= i+1 %>
            </a>
         <% } else { %>
-          <a href="/v1/triggers/search?page=<%= i+1 %>">
+          <a href="/v1/log/search?page=<%= i+1 %>">
           <%= i+1 %>
           </a>
         <% } %>
       <% } %>
-      <a href="/v1/triggers/search?page=<%= data.pageCount %>" style="visibility:<%= data.nextShow ? 'visible' : 'hidden' %>">&raquo;</a>
+      <a href="/v1/log/search?page=<%= data.pageCount %>" style="visibility:<%= data.nextShow ? 'visible' : 'hidden' %>">&raquo;</a>
     </div>
   </div>
   <div class="right-content">

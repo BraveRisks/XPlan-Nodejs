@@ -75,7 +75,7 @@ function fetchAVFilmsWith(films, page) {
   } else if (type == 3) {
     url = `http://www.s-cute.com/contents/?&page=${page}`;
   }
-  log(`URL --> ${nowDate} ${url}`);
+  log(`FetchAVFilms URL --> ${nowDate} ${url}`);
   // Use for test
   // if (page > 1 && DEBUG) {
   //   clearInterval(intervals[type]);
@@ -158,7 +158,6 @@ function fetchAVFilmsWith(films, page) {
           //log(`listOf3 title --> ${title} date --> ${date} htmlURL --> ${htmlURL} imgURL --> ${imgURL}`);
           stopIntervalAndPushData(datas, type, films, title, date, htmlURL, imgURL);
         });
-        
       }
       // 儲存資料
       saveAVFilms(datas);
@@ -174,7 +173,7 @@ function fetchAVFilmsWith(films, page) {
 
 function fetchAVNewsWith(page) {
   const url = `https://www.hilive.tv/news/list/p${page}`;
-  log(`FetchAVNews URL --> ${nowDate} ${url}`);
+  log(`FetchAVNews  URL --> ${nowDate} ${url}`);
 
   (async () => {
     try {
@@ -256,6 +255,7 @@ function fetchAVNewsWith(page) {
 function stopIntervalAndPushData(datas, type, films, title, date, htmlURL, imgURL) {
   if (parseInt(date.split('-')[0]) == dueYear) {
     clearInterval(intervals[type]);
+    AVCore.eventLog('ClearInterval ${films}', `${htmlURL}`);
     log(`clearInterval ${films} --> ${htmlURL}`);
     return false;
   }
@@ -287,6 +287,7 @@ function saveAVFilms(datas) {
           imgURL: datas[i].imgURL,
           createDate: nowDate
         }).save();
+        AVCore.eventLog('SaveAVFilms', `${datas[i].category} ${datas[i].title}`);
       }
     });
   }
