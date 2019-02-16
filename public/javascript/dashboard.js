@@ -123,9 +123,9 @@ sectionNews.addEventListener('click', function () {
   window.location.href = '/v1/news/search?page=1';
 });
 
-let sectionTriggers = document.getElementById('sectionTriggers');
-sectionTriggers.addEventListener('click', function () {
-  window.location.href = '/v1/triggers/search?page=1';
+let sectionLog = document.getElementById('sectionLog');
+sectionLog.addEventListener('click', function () {
+  window.location.href = '/v1/log/search?page=1';
 });
 
 let sectionLogout = document.getElementById('sectionLogout');

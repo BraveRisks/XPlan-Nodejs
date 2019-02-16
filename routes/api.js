@@ -3,19 +3,28 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const ApiDataManager = require('../class/apiDataManager');
-const LIMIT_COUNT = ApiDataManager.LIMIT_COUNT;
+const ApiDataManager = require('../class/api-manager');
+const AVCore = require('../class/av-core');
+
+const LIMIT_COUNT = AVCore.LIMIT_COUNT;
 const SHOW_COUNT = 5;
+
 let router = express.Router();
 let apiDataManager = new ApiDataManager;
 
+// 首頁
 router.get('/', (req, res) => {
+  res.redirect('/login')
+});
+
+// 登入
+router.get('/login', (req, res) => {
   res.render('login', {
     title: 'Login'
   });
 });
 
-// 登入 
+// 登入(保留中)
 router.post('/v1/profile/login', (req, res) => {
   let user = req.body.user;
   let pass = req.body.pass;
@@ -38,7 +47,7 @@ router.post('/v1/profile/login', (req, res) => {
       user: user,
       pass: encryptBySHA256(pass)
     }
-  }, process.env.SECRET_KEY);
+  }, AVCore.JWT_SECRET_KEY);
 
   res.status(200).json({
     status: true,
@@ -54,39 +63,40 @@ router.post('/v1/profile/login', (req, res) => {
   });
 });
 
-// ensureToken,
+// 搜尋
 router.get('/v1/:type/search', (req, res) => {
   let type = req.params.type;
   let category = req.query.category;
   let page = req.query.page - 1;
-  let device = req.query.device;
-  let isFromWeb = (typeof device === 'undefined');
-  Utils.log(`${device} fetch data --> ${type} ${category} ${page}`);
+  let platform = req.query.platform;
+  let isWeb = (typeof platform === 'undefined');
+  log(`${platform} fetch data --> ${type} ${category} ${page}`);
+  
   switch (type) {
-    case 'films':
-      apiDataManager.getFilms(category, page, isFromWeb)
+    case AVCore.FILMS.type:
+      apiDataManager.fetchFilms(category, page, isWeb)
         .then(datas => {
-          handleResult(res, datas, type, page, isFromWeb, category);
+          handleResult(res, datas, type, page, isWeb, category);
         })
         .catch(err => {
-          Utils.log(`GetFilms Error --> ${String(err)}`);
+          log(`FetchFilms Error --> ${String(err)}`);
         });
       break
-    case 'news':
-      apiDataManager.getNews(page, isFromWeb)
+    case AVCore.NEWS.type:
+      apiDataManager.fetchNews(page, isWeb)
         .then(datas => {
-          handleResult(res, datas, type, page, isFromWeb);
+          handleResult(res, datas, type, page, isWeb);
         }).catch(err => {
-          Utils.log(`GetNews Error --> ${String(err)}`);
+          log(`FetchNews Error --> ${String(err)}`);
         });
       break
-    case 'triggers':
-      apiDataManager.getLogs(page)
+    case AVCore.LOG.type:
+      apiDataManager.fetchLog(page)
         .then(datas => {
-          handleResult(res, datas, type, page, isFromWeb);
+          handleResult(res, datas, type, page, isWeb);
         })
         .catch(err => {
-          Utils.log(`GetNews Error --> ${String(err)}`);
+          log(`FetchLog Error --> ${String(err)}`);
         });
       break
   }
@@ -106,7 +116,7 @@ router.put('/v1/:type/update/:id', (req, res) => {
 router.delete('/v1/:type/delete/:id', (req, res) => {
   let type = req.params.type;
   let id = req.params.id;
-  apiDataManager.deleteFilms(type, id)
+  apiDataManager.deleteWith(type, id)
     .then(datas => {
       res.status(200).json(datas);
     });
@@ -118,7 +128,7 @@ router.get('/v1/:type/edit/:id', (req, res) => {
   let id = req.params.id;
 
   switch (type) {
-    case 'films':
+    case AVCore.FILMS.type:
       Films.findById(id, '-__v', (err, e) => {
         res.render('edit', {
           title: `編輯 - ${e.title}`,
@@ -127,7 +137,7 @@ router.get('/v1/:type/edit/:id', (req, res) => {
         });
       });
       break;
-    case 'news':
+    case AVCore.NEWS.type:
       News.findById(id, '-__v', (err, e) => {
         res.render('edit', {
           title: `編輯 - ${e.title}`,
@@ -153,25 +163,34 @@ router.post('/v1/:type/update/:id', (req, res) => {
   }
   apiDataManager.updateData(type, parameters)
     .then(datas => {
-      //Utils.log(`datas --> ${JSON.stringify(datas)}`);
       res.status(200).json(datas);
     });
 });
 
+// 意見回饋
 router.post('/v1/feedback', (req, res) => {
   let parameters = {
     ranking: req.body.ranking,
     content: req.body.content,
     recommend: req.body.recommend
   }
-
   apiDataManager.sendFeedback(parameters)
     .then(datas => {
       res.status(200).json(datas);
     });
 });
 
-function handleResult(res, datas, type, page, isFromWeb, category = '') {
+// Privacy - 隱私權政策
+router.get('/privacy', (req, res) => {
+  res.render('privacy');
+});
+
+// Terms - 服務條款
+router.get('/terms', (req, res) => {
+  res.render('terms');
+});
+
+function handleResult(res, datas, type, page, isWeb, category = '') {
   let totalCount = datas[1];
   // 計算分頁數量
   let pageCount = parseInt((totalCount / LIMIT_COUNT));
@@ -183,7 +202,7 @@ function handleResult(res, datas, type, page, isFromWeb, category = '') {
     datas[0].current.category = category;
   }
 
-  if (isFromWeb) {
+  if (isWeb) {
     datas[0].current.page = page;
 
     // 一次顯示多少頁數
@@ -214,16 +233,16 @@ function handleResult(res, datas, type, page, isFromWeb, category = '') {
 }
 
 function ensureToken(req, res, next) {
-  let device = req.query.device;
+  let platform = req.query.platform;
   // 目前先把mobile部分先開放
-  if (device === 'mobile') {
+  if (platform === 'mobile') {
     next()
     return;
   }
 
   let token = req.body.token || req.query.token || req.headers['token'];
   if (token !== undefined) {
-    jwt.verify(token, process.env.SECRET_KEY, (err, decode) => {
+    jwt.verify(token, AVCore.SECRET_KEY, (err, decode) => {
       if (err) {
         res.status(403).json({
           status: false,
@@ -249,18 +268,8 @@ function ensureToken(req, res, next) {
 }
 
 function encryptBySHA256(pass) {
-  let sha256 = crypto.createHash('sha256', process.env.SECRET_KEY);
+  let sha256 = crypto.createHash('sha256', AVCore.JWT_SECRET_KEY);
   return sha256.update(pass).digest('hex');
 }
-
-// Privacy - 隱私權政策
-router.get('/privacy', (req, res) => {
-  res.render('privacy');
-});
-
-// Terms - 服務條款
-router.get('/terms', (req, res) => {
-  res.render('terms');
-});
 
 module.exports = router;

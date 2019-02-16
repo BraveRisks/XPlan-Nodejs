@@ -5,15 +5,15 @@ const body_parser = require('body-parser');
 const logger = require('morgan');
 const path = require('path');
 const schedule = require('node-schedule');
-const AVDataManager = require('./class/avDataManager');
+const AVDataManager = require('./class/avdata-manager');
+const AVCore = require('./class/av-core');
 
 let app = express();
 let avDataManager = new AVDataManager();
 
-// jwt srect key
-process.env.SECRET_KEY = 'Ray@Zhang_10*S_e_c^r^e_t';
 process.on('unhandledRejection', (reason, promise) => {
-  Utils.log('Unhandled Rejection at:', reason.stack || reason);
+  log(`Unhandled Rejection stack at:${reason.stack}`);
+  log(`Unhandled Rejection reason at:${reason}`);
   // Recommended: send the information to sentry.io
   // or whatever crash reporting service you use
 });
@@ -36,19 +36,20 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'html');
 app.engine('html', require('ejs').__express);
 
-// Utils
-global.DEBUG = false;
-global.Utils = require('./utils/utils');
+// system print log
+global.log = (message) => {
+  if (AVCore.DEBUG) console.log(message);
+}
 
 // Routes & Api
 let api = require('./routes/api');
-app.use(['/', '/v1', '/privacy'], api);
+app.use(['/', '/login', '/v1', '/privacy'], api);
 
 // DB
 require('./db/connect');
 global.Films = require('./db/model/films');
 global.News = require('./db/model/news');
-global.Trigger = require('./db/model/trigger');
+global.Log = require('./db/model/log');
 global.Feedback = require('./db/model/feedback');
 
 // AV List Schedule
@@ -68,9 +69,9 @@ let avSchedule = schedule.scheduleJob(rule, () => {
 
 app.set('port', (process.env.PORT || 5000));
 app.listen(app.get('port'), function () {
-  console.log('XPlan app is running on port', app.get('port'));
-  //avDataManager.getAVFilms(true);
-  //avDataManager.getAVNews(true);
-  avDataManager.getAVFilms(false);
-  avDataManager.getAVNews(false);
+  log('XPlan app is running on port', app.get('port'));
+  //avDataManager.fetchAVFilms(true);
+  //avDataManager.fetchAVNews(true);
+  avDataManager.fetchAVFilms(false);
+  avDataManager.fetchAVNews(false);
 });

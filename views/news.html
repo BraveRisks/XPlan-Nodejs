@@ -31,7 +31,7 @@
         <li class="drawer-list-section" id="sectionNews">
           <img src="/images/drawer_news.svg"><span>情報</span>
         </li>
-        <li class="drawer-list-section" id="sectionTriggers">
+        <li class="drawer-list-section" id="sectionLog">
           <img src="/images/drawer_trigger.svg"><span>Log紀錄</span>
         </li>
         <li class="drawer-list-section" id="sectionUsers">
@@ -86,15 +86,15 @@
     <div class="pagination" id="pagination">
       <a href="/v1/news/search?page=1" style="visibility:<%= data.prevShow ? 'visible' : 'hidden' %>">&laquo;</a>
       <% for (let i = data.current.start; i < data.current.end; i++) { %>
-      <% if (i == data.current.page) { %>
-      <a href="/v1/news/search?page=<%= i+1 %>" class="active">
-        <%= i+1 %>
-      </a>
-      <% } else { %>
-      <a href="/v1/news/search?page=<%= i+1 %>">
-        <%= i+1 %>
-      </a>
-      <% } %>
+        <% if (i == data.current.page) { %>
+          <a href="/v1/news/search?page=<%= i+1 %>" class="active">
+            <%= i+1 %>
+          </a>
+        <% } else { %>
+          <a href="/v1/news/search?page=<%= i+1 %>">
+            <%= i+1 %>
+          </a>
+        <% } %>
       <% } %>
       <a href="/v1/news/search?page=<%= data.pageCount %>" style="visibility:<%= data.nextShow ? 'visible' : 'hidden' %>">&raquo;</a>
     </div>

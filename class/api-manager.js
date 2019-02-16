@@ -1,62 +1,51 @@
 'use strict'
 
-// 每次取得數量
-const LIMIT_COUNT = 30;
-const FILMS = {
-  index: 1,
-  type: 'films'
-};
-const NEWS = {
-  index: 2,
-  type: 'news'
-};
-const LOGS = {
-  index: 3,
-  type: 'news'
-};
-const OPTIONS = {
-  '__v': 0
-};
+const AVCore = require('./av-core');
+const LIMIT_COUNT = AVCore.LIMIT_COUNT;
+const FILMS = AVCore.FILMS;
+const NEWS = AVCore.NEWS;
+const LOGS = AVCore.LOGS;
+const OPTIONS = AVCore.OPTIONS;
 
-// 管理Films News Trigger資料取得邏輯
+// 管理Films News Log資料取得邏輯
 class ApiDataManager {
   constructor() {}
 
-  async getFilms(category, page, isFromWeb) {
+  async fetchFilms(category, page, isWeb) {
     try {
       return await Promise.all([
-        getFilmsDetailWith(category, page, isFromWeb),
-        getFilmsDetailWith(category, page, isFromWeb, true)
+        fetchFilmsDetailWith(category, page, isWeb),
+        fetchFilmsDetailWith(category, page, isWeb, true)
       ]);
     } catch (err) {
-      saveTrigger(`getFilms category：${category} page：${page}`, err);
-      let result = handleError(FILMS.index, err, isFromWeb);
+      AVCore.eventLog('fetchFilms', `category：${category} page：${page}`, err);
+      let result = handleError(FILMS.index, err, isWeb);
       return [result, 0];
     }
   }
 
-  async getNews(page, isFromWeb) {
+  async fetchNews(page, isWeb) {
     try {
       return await Promise.all([
-        getNewsDetailWith(page, isFromWeb),
-        getNewsDetailWith(page, isFromWeb, true)
+        fetchNewsDetailWith(page, isWeb),
+        fetchNewsDetailWith(page, isWeb, true)
       ]);
     } catch (err) {
-      saveTrigger(`getNews page：${page}`, err);
-      let result = handleError(NEWS.index, err, isFromWeb);
+      AVCore.eventLog('fetchNews', `page：${page}`, err);
+      let result = handleError(NEWS.index, err, isWeb);
       return [result, 0];
     }
   }
 
-  async getLogs(page) {
+  async fetchLog(page) {
     try {
       return await Promise.all([
-        getLogDetailWith(page),
-        getLogDetailWith(page, true)
+        fetchLogDetailWith(page),
+        fetchLogDetailWith(page, true)
       ]);
     } catch (err) {
-      saveTrigger(`getLogs page：${page}`, err);
-      let result = handleError(LOGS.index, err, isFromWeb);
+      AVCore.eventLog('fetchLog', `page：${page}`, err);
+      let result = handleError(LOGS.index, err, isWeb);
       return [result, 0];
     }
   }
@@ -149,7 +138,7 @@ class ApiDataManager {
   }
 
   // 刪除films or news by _id
-  async deleteFilms(type, id) {
+  async deleteWith(type, id) {
     switch (type) {
       case FILMS.type:
         return new Promise((resolve, reject) => {
@@ -187,7 +176,7 @@ class ApiDataManager {
         ranking: parameters.ranking,
         content: parameters.content,
         recommend: parameters.recommend,
-        createDate: Utils.dateNow()
+        createDate: AVCore.nowDate()
       }).save((err, e) => {
         let result = {
           status: err === null,
@@ -199,7 +188,8 @@ class ApiDataManager {
   }
 }
 
-function getFilmsDetailWith(category, page, isFromWeb, isCount = false) {
+
+function fetchFilmsDetailWith(category, page, isWeb, isCount = false) {
   if (isCount) {
     return new Promise((resolve, reject) => {
       Films.countDocuments({
@@ -213,7 +203,7 @@ function getFilmsDetailWith(category, page, isFromWeb, isCount = false) {
     return new Promise((resolve, reject) => {
       let result = {
         status: true,
-        message: 'Get films data success',
+        message: 'Fetch films data success',
         totalCount: 0,
         pageCount: 0,
         current: {
@@ -227,7 +217,7 @@ function getFilmsDetailWith(category, page, isFromWeb, isCount = false) {
       }, OPTIONS, (err, e) => {
         if (err) {
           result.status = false;
-          result.message = `Get films data error of ${err}`;
+          result.message = `Fetch films data error of ${err}`;
           reject(result);
         } else {
           result.listCount = e === null ? 0 : e.length;
@@ -241,7 +231,7 @@ function getFilmsDetailWith(category, page, isFromWeb, isCount = false) {
   }
 }
 
-function getNewsDetailWith(page, isFromWeb, isCount = false) {
+function fetchNewsDetailWith(page, isWeb, isCount = false) {
   if (isCount) {
     return new Promise((resolve, reject) => {
       News.countDocuments((err, count) => {
@@ -253,7 +243,7 @@ function getNewsDetailWith(page, isFromWeb, isCount = false) {
     return new Promise((resolve, reject) => {
       let result = {
         status: true,
-        message: 'Get news data success',
+        message: 'Fetch news data success',
         totalCount: 0,
         pageCount: 0,
         current: {
@@ -264,7 +254,7 @@ function getNewsDetailWith(page, isFromWeb, isCount = false) {
       News.find({}, OPTIONS, (err, e) => {
         if (err) {
           result.status = false;
-          result.message = `Get news data error of ${err}`;
+          result.message = `Fetch news data error of ${err}`;
           reject(result);
         } else {
           result.listCount = e === null ? 0 : e.length;
@@ -278,10 +268,10 @@ function getNewsDetailWith(page, isFromWeb, isCount = false) {
   }
 }
 
-function getLogDetailWith(page, isCount = false) {
+function fetchLogDetailWith(page, isCount = false) {
   if (isCount) {
     return new Promise((resolve, reject) => {
-      Trigger.countDocuments((err, count) => {
+      Log.countDocuments((err, count) => {
         if (err) reject(0);
         else resolve(count);
       });
@@ -290,7 +280,7 @@ function getLogDetailWith(page, isCount = false) {
     return new Promise((resolve, reject) => {
       let result = {
         status: true,
-        message: 'Get log data success',
+        message: 'Fecth log data success',
         totalCount: 0,
         pageCount: 0,
         current: {
@@ -298,10 +288,10 @@ function getLogDetailWith(page, isCount = false) {
         },
         listCount: 0
       }
-      Trigger.find({}, OPTIONS, (err, e) => {
+      Log.find({}, OPTIONS, (err, e) => {
         if (err) {
           result.status = false;
-          result.message = `Get log data error of ${err}`;
+          result.message = `Fecth log data error of ${err}`;
           reject(result);
         } else {
           result.listCount = e === null ? 0 : e.length;
@@ -315,18 +305,9 @@ function getLogDetailWith(page, isCount = false) {
   }
 }
 
-function saveTrigger(method, msg = null) {
-  new Trigger({
-    method: method,
-    message: msg,
-    isError: msg !== null,
-    createDate: Utils.dateNow()
-  }).save();
-}
-
-function handleError(index, err, isFromWeb) {
-  let message = type == FILMS.index ? `Get films data error of ${err}` :
-    type == NEWS.index ? `Get news data error of ${err}` : `Get log data error of ${err}`
+function handleError(index, err, isWeb) {
+  let message = type == FILMS.index ? `Fetch films data error of ${err}` :
+                type == NEWS.index  ? `Fetch news data error of ${err}`  : `Fetch log data error of ${err}`
   let result = {
     status: false,
     message: message,
@@ -337,7 +318,7 @@ function handleError(index, err, isFromWeb) {
     },
     listCount: 0
   }
-  if (isFromWeb) {
+  if (isWeb) {
     result.current.start = 0;
     result.current.end = 0;
     result.prevShow = false;
@@ -348,4 +329,3 @@ function handleError(index, err, isFromWeb) {
 }
 
 module.exports = ApiDataManager;
-module.exports.LIMIT_COUNT = LIMIT_COUNT;
